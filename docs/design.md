@@ -96,7 +96,32 @@
 
 `2026-10-13` 배포 준비에서 로컬 패키지의 `write-me` 한 개 발견과 두 agent의 프로젝트 설치를 확인했습니다. 새 임시 디렉터리에서 `--global` 없이 실행했고, 각 경로의 다섯 파일을 원본과 SHA-256으로 대조해 `PASS`였습니다. project lock도 생성됐습니다. 기존 사용자 설치본과 네 Skill은 검증 대상으로 덮어쓰지 않았습니다.
 
-원격 태그의 발견·설치 결과와 릴리즈 상태는 [v0.3.4 릴리즈](https://github.com/soom-kang/write-me/releases/tag/v0.3.4)에서 확인합니다. 파일 설치 검증과 아래의 실제 모델 출력 검증은 별도로 다룹니다.
+### v0.3.4 게시·설치 결과
+
+`2026-10-13`에 [v0.3.4 정식 릴리즈](https://github.com/soom-kang/write-me/releases/tag/v0.3.4)를 게시했습니다. GitHub API에서 public 저장소, `draft: false`, `prerelease: false`, Latest 릴리즈를 확인했습니다.
+
+| 확인 항목 | 결과 | 근거 |
+|---|---|---|
+| 태그 소스 | `PASS` | `v0.3.4`는 source commit `4259088a71c3370421019e49dd24d52c3e3d8320`을 가리킴 |
+| 원격 Skill 발견 | `PASS` | 태그 URL에서 `write-me` 한 개 발견 |
+| Codex 프로젝트 설치 | `PASS` | `.agents/skills/write-me`의 다섯 파일이 태그 소스와 SHA-256까지 같음 |
+| Claude Code 프로젝트 설치 | `PASS` | `.claude/skills/write-me`의 다섯 파일이 태그 소스와 SHA-256까지 같음 |
+| project lock | `PASS` | source `soom-kang/write-me`, ref `v0.3.4`, skillPath `skills/write-me/SKILL.md` 확인 |
+| 기존 자산 보존 | `PASS` | 두 사용자 설치본과 기존 네 Skill의 파일은 변경 전 SHA-256 유지 |
+
+annotated tag 객체는 `7411ae327766b50d2b04278aac7e7455c69c1dc6`입니다. 최초 tag push는 원격에서 `FAIL`이었고, 태그가 없으며 ruleset이 비어 있음을 확인한 뒤 같은 객체를 한 번 재게시했습니다. 재게시와 commit 일치 확인은 `PASS`입니다. 최초 실패의 내부 원인은 확정하지 않았으며 태그를 이동하거나 강제 push하지 않았습니다.
+
+원격 설치는 `skills` CLI `1.7.2`, Node.js `24.21.0`, npm `11.19.0`으로 빈 임시 프로젝트에서 실행했습니다. README의 프로젝트 설치 명령에 `--yes --json`을 추가해 자동 확인했고 `--global`은 사용하지 않았습니다. 결과는 `status: installed`, `scope: project`, `mode: copy`이며 symlink 대신 독립 복사본을 확인했습니다. LICENSE와 상대 참조도 함께 보존됐습니다.
+
+이 문서의 게시 후 결과는 별도의 문서 commit에 기록했습니다. 릴리즈 태그와 Skill의 다섯 파일은 그대로 유지하며, 파일 설치 검증과 아래의 실제 모델 출력 검증은 구분합니다. 기존 `0.3.4`의 열 모델 실행 결과는 동일한 지침의 이전 검증이며, npx 설치 후 새로 실행한 결과로 세지 않습니다.
+
+입력·명령·파일 manifest·설치 결과는 `/private/tmp/write-me-release-v034-d9u_orx5`의 `preflight.json`, `local-install-checks.json`, `tagged-install-result.json`, `tagged-install-checks.json`, `publication.json`에 남겼습니다. 임시 기록은 정리될 수 있으므로 tag·commit·명령과 주요 결과는 이 문서와 릴리즈 설명에도 보존합니다.
+
+- `NOT_RUN`: 사용자 경로의 npx 전역 설치. 기존 설치본과 LICENSE 차이를 보존하기 위해 임시 프로젝트에서만 확인했습니다.
+- `NOT_RUN`: npx 설치 이후의 새 모델 실행·전체 과거 사례·Desktop·Claude.ai·Cowork·API·다른 모델 검증. Skill 실행 지침을 바꾸지 않아 이번에는 배포와 설치 확인에 집중했습니다.
+- `NOT_RUN`: 설치 도구의 외부 security audit. 검증 명령에 `DO_NOT_TRACK=1`을 사용했으며 audit 결과를 설치 `PASS`로 해석하지 않습니다.
+
+새 검증 script·framework·dependency나 npm 배포 패키지는 추가하지 않았습니다. 초기 Git 저장소와 `.gitignore`를 만들고 태그·릴리즈를 게시했습니다. 로컬 구조 검사와 이전 모델 결과를 공개 게시·설치 증거로 대체하지 않습니다.
 
 ## 권한과 실패 처리
 
