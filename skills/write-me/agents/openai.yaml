@@ -1,0 +1,6 @@
+interface:
+  display_name: "Write Me"
+  short_description: "의미를 보존하며 자연스럽고 일관된 한국어 글을 작성·윤문·검토합니다"
+  default_prompt: "$write-me 아래 한국어 글을 자연스럽게 다듬어 주세요. 의미와 문체를 유지하고 완성문만 제공해 주세요."
+policy:
+  allow_implicit_invocation: true
