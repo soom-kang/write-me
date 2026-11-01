@@ -116,7 +116,7 @@
 
 | 버전 | 기록 | 주요 범위 |
 |---|---|---|
-| `0.4.0` | [evals/baselines/0.4.0.md](../evals/baselines/0.4.0.md) | 원칙 중심 재구성, 0.3.4 baseline([0.3.4.md](../evals/baselines/0.3.4.md))과 같은 90회 비교 |
+| `0.4.0` | [evals/baselines/0.4.0.md](../evals/baselines/0.4.0.md) · [v0.4.0.md](validation/v0.4.0.md) | 원칙 중심 재구성, 0.3.4 baseline([0.3.4.md](../evals/baselines/0.3.4.md))과 같은 90회 비교, 릴리즈 게시·설치 결과 |
 | `0.3.4` | [v0.3.4.md](validation/v0.3.4.md) | 독립 항목별 불릿 보완, 같은 실패 입력 재검증, 릴리즈 게시·설치 결과 |
 | `0.3.3` | [v0.3.3.md](validation/v0.3.3.md) | 사실 사이의 관계 보존, 일반 안내문·새 소재 후속 검증 |
 | `0.3.2` | [v0.3.2.md](validation/v0.3.2.md) | 자동 선택 누락 분석, 이름 없는 요청 반복 검증 |
