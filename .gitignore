@@ -2,3 +2,5 @@
 node_modules/
 .agents/skills/
 .claude/skills/
+evals/results/
+__pycache__/
