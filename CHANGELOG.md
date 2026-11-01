@@ -2,6 +2,21 @@
 
 이 프로젝트의 주요 동작 변경을 기록합니다. 형식은 [Keep a Changelog](https://keepachangelog.com/ko/1.1.0/)를 따르며, 버전은 Skill의 `metadata.version`과 같습니다. 각 버전의 검증 근거는 [docs/validation/](docs/design.md#검증-기록)에 있습니다.
 
+## [0.4.0] - Unreleased
+
+### Added
+
+- `evals/`에 회귀 평가 세트를 추가했습니다. 사례 15개와 결정적 판정기, Claude Code·Codex 실행기, 판정기 테스트, 버전별 실행 요약(`evals/baselines/`)으로 구성됩니다.
+
+### Changed
+
+- 날짜·숫자는 값과 함께 표기도 유지하고, 의무 표현을 요청형으로 바꾸지 않도록 보호 영역에 명시했습니다.
+- 불릿·산문 예외·`완성문만` 해석을 `SKILL.md`의 "출력 구조 선택" 한 절에 모았습니다. 불릿은 확인 항목에만 쓰고, 일정·조건·운영 상태 같은 문장은 문단으로 둡니다.
+- 완료 점검을 보호 영역·관계·구조 체크리스트로 정리했습니다.
+- `editing-guide.md`의 중복 규칙을 참조로 바꾸고, 문장형 내용을 불릿으로 쪼개지 않는 사례를 추가했습니다. 회의록 예시는 README와 같게 맞췄습니다.
+
+[평가 기록](evals/baselines/0.4.0.md) — 같은 90회 평가에서 0.3.4 PASS 69 · FAIL 21 → 0.4.0 PASS 90 · FAIL 0
+
 ## [0.3.4] - 2026-10-13
 
 ### Changed
