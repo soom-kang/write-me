@@ -27,7 +27,9 @@ python3 evals/check.py evals/results/<label>
 
 - `--case <id>`를 반복해 일부 사례만 실행합니다.
 - Claude Code는 기본으로 저장소의 `skills/write-me`를 임시 프로젝트 Skill로 복사하고 `--setting-sources project`로 실행합니다. 따라서 사용자 Skill과의 선택 경쟁은 빠집니다. 과거 검증과 같은 조건이 필요하면 `--claude-skills installed`를 씁니다.
-- Codex는 사용자 설치본을 사용합니다. 설치본 `SKILL.md`가 저장소와 다르면 경고합니다.
+- Codex도 기본으로 저장소 Skill을 임시 git 저장소의 `.agents/skills`에 복사해 실행합니다. 사용자 설치본을 쓰려면 `--codex-skills installed`를 씁니다(저장소와 다르면 경고).
+- 결과의 `skill_paths`에 실제로 읽은 `SKILL.md` 경로가 남습니다. 프로젝트 모드에서 사용자 설치본을 읽으면 실행 중 경고합니다.
+- `evals/baselines/`에는 버전별 실행 요약을 commit합니다.
 - 실행에는 모델 사용량이 듭니다. 전체 15개 사례를 두 CLI에서 3회씩 돌리면 90회 요청입니다.
 
 ## 판정 범위

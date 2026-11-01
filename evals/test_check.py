@@ -47,6 +47,13 @@ class CheckTest(unittest.TestCase):
     def test_item_bullets_pass(self):
         self.assertEqual(status("notice-bookclub", True, BOOKCLUB_ITEM_BULLETS), "PASS")
 
+    def test_over_structured_fails(self):
+        output = BOOKCLUB_ITEM_BULLETS.replace(
+            "신청은 2026-11-09부터 받으며, 확정 안내 이메일을 받아야 참여가 확정됩니다.",
+            "**신청 안내**\n\n- 신청은 2026-11-09부터 받습니다.\n- 확정 안내 이메일을 받아야 참여가 확정됩니다.",
+        )
+        self.assertEqual(status("notice-bookclub", True, output), "FAIL")
+
     def test_new_causal_link_fails(self):
         output = BOOKCLUB_ITEM_BULLETS.replace("시범 운영 중입니다. 화면에", "시범 운영 중이라 화면에")
         self.assertEqual(status("notice-bookclub", True, output), "FAIL")

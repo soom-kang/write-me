@@ -7,14 +7,16 @@
 - 각 회차는 빈 임시 디렉터리와 새 세션에서 실행합니다. 입력은 stdin으로만 전달합니다.
 - Claude Code는 기본으로 이 저장소의 `skills/write-me`를 임시 프로젝트 Skill로 복사하고
   `--setting-sources project`로 실행합니다. 사용자 설치본을 쓰려면 `--claude-skills installed`.
-- Codex는 사용자 설치본(`~/.agents/skills` 또는 `~/.codex/skills`)을 사용합니다.
-  저장소의 SKILL.md와 hash가 다르면 경고합니다.
+- Codex도 기본으로 같은 Skill을 임시 git 저장소의 `.agents/skills`에 복사합니다.
+  사용자 설치본을 쓰려면 `--codex-skills installed`(저장소와 hash가 다르면 경고).
+- 각 결과의 `skill_paths`에 실제로 읽은 SKILL.md 경로를 남깁니다.
 - 결과는 `evals/results/<label>/<cli>/<case>-<run>.json`에 저장합니다(gitignore 대상).
 """
 
 import argparse
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -67,6 +69,10 @@ def codex_command(cwd):
     ]
 
 
+def skill_paths_in(text):
+    return sorted(set(re.findall(r"[^\s'\"]*write-me/SKILL\.md", text)))
+
+
 def parse_claude(stdout):
     invoked, output, session_id = False, "", None
     for line in stdout.splitlines():
@@ -106,13 +112,16 @@ def parse_codex(stdout):
     return invoked, output, session_id
 
 
-def run_once(cli, case, run, out_dir, claude_skills):
+def run_once(cli, case, run, out_dir, skill_source):
     with tempfile.TemporaryDirectory(prefix="write-me-eval-") as cwd:
         if cli == "claude":
-            if claude_skills == "project":
+            if skill_source["claude"] == "project":
                 shutil.copytree(SKILL_DIR, Path(cwd) / ".claude/skills/write-me")
-            command, parse = claude_command(claude_skills), parse_claude
+            command, parse = claude_command(skill_source["claude"]), parse_claude
         else:
+            if skill_source["codex"] == "project":
+                shutil.copytree(SKILL_DIR, Path(cwd) / ".agents/skills/write-me")
+                subprocess.run(["git", "init", "-q", cwd], check=True)
             command, parse = codex_command(cwd), parse_codex
         started = time.monotonic()
         try:
@@ -128,6 +137,7 @@ def run_once(cli, case, run, out_dir, claude_skills):
         invoked = None
     record = {
         "case_id": case["id"], "cli": cli, "run": run, "invoked": invoked, "output": output,
+        "skill_paths": skill_paths_in(stdout),
         "session_id": session_id, "returncode": returncode,
         "stderr_tail": stderr[-500:] if returncode != 0 else "",
         "elapsed_seconds": round(time.monotonic() - started, 1),
@@ -136,7 +146,9 @@ def run_once(cli, case, run, out_dir, claude_skills):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     status = overall(check(case, invoked, output))
-    print(f"{status:7} {cli:6} {case['id']:28} #{run}", flush=True)
+    stray = [p for p in record["skill_paths"] if skill_source[cli] == "project" and p.startswith(("/", "~")) and "write-me-eval-" not in p]
+    note = f"  경고: 프로젝트 밖 Skill 읽음 {stray}" if stray else ""
+    print(f"{status:7} {cli:6} {case['id']:28} #{run}{note}", flush=True)
 
 
 def main():
@@ -147,6 +159,7 @@ def main():
     parser.add_argument("--jobs", type=int, default=2, help="동시에 실행할 회차 수")
     parser.add_argument("--label", help="결과 디렉터리 이름. 기본값은 <version>-<시각>")
     parser.add_argument("--claude-skills", choices=["project", "installed"], default="project")
+    parser.add_argument("--codex-skills", choices=["project", "installed"], default="project")
     args = parser.parse_args()
 
     cases = load_cases()
@@ -155,7 +168,8 @@ def main():
     label = args.label or f"{skill_version()}-{datetime.now():%Y%m%d-%H%M%S}"
     out_dir = RESULTS_DIR / label
 
-    if "codex" in clis:
+    skill_source = {"claude": args.claude_skills, "codex": args.codex_skills}
+    if "codex" in clis and args.codex_skills == "installed":
         installed = next((d for d in CODEX_SKILL_DIRS if (d / "SKILL.md").exists()), None)
         if installed is None:
             sys.exit("Codex 설치본 write-me를 찾지 못했습니다.")
@@ -166,13 +180,13 @@ def main():
     (out_dir / "meta.json").write_text(json.dumps({
         "label": label, "skill_version": skill_version(),
         "skill_sha256": sha256(SKILL_DIR / "SKILL.md"),
-        "clis": clis, "claude_skills": args.claude_skills, "runs": args.runs,
+        "clis": clis, "skill_source": skill_source, "runs": args.runs,
         "cases": [c["id"] for c in selected], "started_at": datetime.now().isoformat(timespec="seconds"),
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     jobs = [(cli, case, run) for cli in clis for case in selected for run in range(1, args.runs + 1)]
     with ThreadPoolExecutor(max_workers=args.jobs) as pool:
-        for future in [pool.submit(run_once, cli, case, run, out_dir, args.claude_skills) for cli, case, run in jobs]:
+        for future in [pool.submit(run_once, cli, case, run, out_dir, skill_source) for cli, case, run in jobs]:
             future.result()
 
     print(f"\n# {out_dir.relative_to(ROOT)}")

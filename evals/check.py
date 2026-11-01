@@ -76,6 +76,9 @@ def check(case, invoked, output):
     if fmt == "bullets":
         missing = assign_groups(expect.get("bullets", []), bullets) if bullets else ["(불릿 없음)"]
         results.append(("format:bullets", "FAIL" if missing else "PASS", ", ".join(missing)))
+        if "max_bullets" in expect:
+            ok = len(bullets) <= expect["max_bullets"]
+            results.append(("max_bullets", "PASS" if ok else "FAIL", f"{len(bullets)} > {expect['max_bullets']}" if not ok else ""))
     elif fmt == "prose":
         structured = [line for line in body.splitlines() if BULLET_RE.match(line) or HEADING_RE.match(line)]
         results.append(("format:prose", "FAIL" if structured else "PASS", structured[0].strip() if structured else ""))
