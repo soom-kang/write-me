@@ -83,7 +83,7 @@
 
 ## 배포와 릴리즈
 
-공개 소스는 [soom-kang/write-me](https://github.com/soom-kang/write-me), 최신 배포 버전은 `v0.3.4`입니다. 저장소의 `metadata.version`은 미배포 `0.4.0`이며, 태그를 게시하기 전까지 README 설치 명령은 `v0.3.4`를 가리킵니다. Git 태그에는 `v` 접두사를 붙입니다. 릴리즈는 해당 태그의 소스를 사용하고, 게시한 태그를 다른 commit으로 이동하지 않습니다.
+공개 소스는 [soom-kang/write-me](https://github.com/soom-kang/write-me), 최신 배포 버전은 `v0.4.0`입니다. Skill의 `metadata.version`은 `0.4.0`이며 README 설치 명령도 이 태그에 고정합니다. Git 태그에는 `v` 접두사를 붙입니다. 릴리즈는 해당 태그의 소스를 사용하고, 게시한 태그를 다른 commit으로 이동하지 않습니다.
 
 설치는 공식 `skills` CLI `1.7.2`의 `npx skills add`를 사용합니다. Node.js `22.20.0` 이상과 Git이 필요하며, 별도 npm 패키지나 실행 프로그램은 만들지 않습니다. 설치 명령은 README에 기록합니다. [skills CLI 안내](https://github.com/vercel-labs/skills#install-a-skill)
 

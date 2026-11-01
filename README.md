@@ -50,19 +50,19 @@ $write-me 아래 기술 안내문을 자연스럽게 다듬어 주세요.
 
 ### npx
 
-Node.js `22.20.0` 이상과 Git이 필요합니다. 설치 명령은 검증한 `skills` CLI `1.7.2`와 Write Me 태그 `v0.3.4`에 고정합니다. [skills CLI 안내](https://github.com/vercel-labs/skills#install-a-skill)
+Node.js `22.20.0` 이상과 Git이 필요합니다. 설치 명령은 검증한 `skills` CLI `1.7.2`와 Write Me 태그 `v0.4.0`에 고정합니다. [skills CLI 안내](https://github.com/vercel-labs/skills#install-a-skill)
 
 설치하려는 프로젝트 디렉터리에서 실행합니다.
 
 ```sh
-npx skills@1.7.2 add https://github.com/soom-kang/write-me/tree/v0.3.4 \
+npx skills@1.7.2 add https://github.com/soom-kang/write-me/tree/v0.4.0 \
   --skill write-me --agent codex claude-code --copy
 ```
 
 Codex는 `.agents/skills/write-me`, Claude Code는 `.claude/skills/write-me`에 설치됩니다. 모든 프로젝트에서 사용하려면 사용자 경로에 설치합니다.
 
 ```sh
-npx skills@1.7.2 add https://github.com/soom-kang/write-me/tree/v0.3.4 \
+npx skills@1.7.2 add https://github.com/soom-kang/write-me/tree/v0.4.0 \
   --global --skill write-me --agent codex claude-code --copy
 ```
 
@@ -124,6 +124,6 @@ npx skills@1.7.2 add https://github.com/soom-kang/write-me/tree/v0.3.4 \
 
 [SKILL.md](skills/write-me/SKILL.md)는 실행 계약을, [설계와 검증](docs/design.md)은 공통 구조·플랫폼 차이·검증 결과·유지보수 기준을 설명합니다. 문법 판단은 [korean-rules.md](skills/write-me/references/korean-rules.md), 편집 사례와 변경량 계산은 [editing-guide.md](skills/write-me/references/editing-guide.md)에 있습니다.
 
-현재 지원·실행 검증 대상은 Codex와 Claude Code입니다. 일반 사실 질문, 영어 글 전체의 편집, AI 작성자 판정에는 적용하지 않습니다. 버전은 `SKILL.md`의 `metadata.version`으로 관리하며, 실행 계약을 바꾸면 관련 대표 입력과 문서를 함께 확인합니다.
+현재 지원·실행 검증 대상은 Codex와 Claude Code입니다. 일반 사실 질문, 영어 글 전체의 편집, AI 작성자 판정에는 적용하지 않습니다. 버전은 `SKILL.md`의 `metadata.version`으로 관리하며, 변경 내역은 [CHANGELOG](CHANGELOG.md)에 있습니다. 실행 계약을 바꾸면 [회귀 평가](evals/README.md)를 변경 전후로 실행해 비교합니다. 평가 세트는 저장소 전용이며 설치 대상에 포함되지 않습니다.
 
 [MIT](LICENSE)

@@ -2,7 +2,7 @@
 
 이 프로젝트의 주요 동작 변경을 기록합니다. 형식은 [Keep a Changelog](https://keepachangelog.com/ko/1.1.0/)를 따르며, 버전은 Skill의 `metadata.version`과 같습니다. 각 버전의 검증 근거는 [docs/validation/](docs/design.md#검증-기록)에 있습니다.
 
-## [0.4.0] - Unreleased
+## [0.4.0] - 2026-11-01
 
 ### Added
 
